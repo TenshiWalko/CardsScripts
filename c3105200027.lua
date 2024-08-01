@@ -24,13 +24,12 @@ function s.initial_effect(c)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
 
-	-- Double ATK and destroy at End Phase
+	-- Gain 1000 ATK and destroy at End Phase
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetCountLimit(1,{id,2})
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
 	
