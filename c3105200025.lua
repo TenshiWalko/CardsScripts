@@ -51,7 +51,7 @@ function s.splimit(e,se,sp,st)
 end
 
 function s.eftg(e,c)
-	return c:IsRace(RACE_DRAGON) or c:IsRace(RACE_WARRIOR) or c:IsRace(RACE_MACHINE)
+	return c:IsRace(RACE_DRAGON) or c:IsRace(RACE_WARRIOR) or c:IsRace(RACE_MACHINE) and not c:IsCode(id)
 end
 
 function s.rmcfilter(c)
