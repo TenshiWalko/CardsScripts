@@ -1,6 +1,5 @@
---Critias Mythic Blue-Eyes
+--Critias The Blue-Eyes Dragon
 local s,id=GetID()
-
 s.listed_names={CARD_BLUEEYES_W_DRAGON}
 
 function s.initial_effect(c)
@@ -60,7 +59,7 @@ end
 
 function s.mptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil)
-	local b2=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION)>0
+	local b2=Duel.GetLocationCountFromEx(tp,tp,nil,TYPE_FUSION)>-1
 		and Duel.IsExistingMatchingCard(s.fusfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,Duel.GetFusionMaterial(tp),tp)
 	if chk==0 then return b1 or b2 end
 	local op=0
@@ -97,6 +96,7 @@ function s.mpop(e,tp,eg,ep,ev,re,r,rp)
 			local tc=sg:Select(tp,1,1,nil):GetFirst()
 			if tc then
 				local mat=Duel.SelectFusionMaterial(tp,tc,mg,nil,chkf)
+				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 				if #mat>0 then
 					tc:SetMaterial(mat)
 					Duel.SendtoGrave(mat,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
@@ -113,3 +113,4 @@ function s.fusfilter(c,e,tp,m,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 		and c:CheckFusionMaterial(m,nil,chkf)
 end
+
