@@ -1,18 +1,17 @@
---Buster Blader - Legendary Swordsman
+-- Palladium Oracle - Buster Blader
 local s,id=GetID()
 
-s.listed_names={CARD_DARK_MAGICIAN}
+-- Lista "Buster Blader" para reconocimiento de otras cartas
+s.listed_names={CARD_DARK_MAGICIAN, 78193831}
 
 function s.initial_effect(c)
-	-- Change name
+	-- Change name to "Buster Blader" in all zones, while keeping its own name
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetCode(EFFECT_CHANGE_CODE)
-	e1:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
-	e1:SetValue(78193831)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetCode(EFFECT_ADD_CODE)
+	e1:SetValue(78193831) -- Código de Buster Blader
 	c:RegisterEffect(e1)
-	
 	
 	-- Special Summon from hand
 	local e3=Effect.CreateEffect(c)
@@ -37,7 +36,6 @@ function s.initial_effect(c)
 	e4:SetOperation(s.thop)
 	c:RegisterEffect(e4)
 end
-
 
 function s.spcfilter(c)
 	return (c:IsRace(RACE_SPELLCASTER) or (c:IsType(TYPE_SPELL+TYPE_TRAP) and c:ListsCode(CARD_DARK_MAGICIAN) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()))) and c:IsAbleToGraveAsCost()
@@ -79,3 +77,4 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
+
