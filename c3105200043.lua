@@ -1,5 +1,4 @@
 --W-Wing Megacatapult
---scripted by pyrQ
 local s,id=GetID()
 function s.initial_effect(c)
 	--Equip 1 Level 4 LIGHT Machine monster from your Deck to this card

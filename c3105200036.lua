@@ -31,6 +31,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
+
 s.listed_series={0x3008}
 s.listed_names={CARD_POLYMERIZATION}
 

@@ -19,13 +19,17 @@ function s.initial_effect(c)
 	e1:SetOperation(s.repop)
 	c:RegisterEffect(e1)
 	
-	-- ATK boost for each "Crystal Beast" treated as a Spell
+	-- Quick Effect: Destroy 1 "Crystal Beast" and destroy 1 opponent's card
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetValue(s.atkval)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
+	e2:SetTarget(s.rthtg)
+	e2:SetOperation(s.rthop)
 	c:RegisterEffect(e2)
 end
 
@@ -78,8 +82,42 @@ function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	return false
 end
 
--- ATK boost effect
-function s.atkval(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsSetCard,c:GetControler(),LOCATION_SZONE,0,nil,0x1034)*500
+-- Quick Effect: Destroy 1 "Crystal Beast" from S/T Zone to destroy 1 opponent's card
+function s.thfilter(c)
+	return c:IsSetCard(0x1034) and c:IsFaceup() and c:IsLocation(LOCATION_SZONE) and c:IsDestructable()
 end
+
+function s.rthtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsDestructable() end
+	if chk==0 then 
+		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_SZONE,0,1,nil)
+			and Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil)
+	end
+	-- Select the "Crystal Beast" to destroy
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_SZONE,0,1,1,nil)
+	if #g > 0 then
+		Duel.SetTargetCard(g)
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	end
+	-- Select the opponent's card to destroy
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local tg=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tg,1,0,0)
+end
+
+function s.rthop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local dg=g:Filter(Card.IsRelateToEffect,nil,e)
+	-- Destroy the selected "Crystal Beast" from S/T Zone
+	local destroyCard=dg:Filter(s.thfilter,nil):GetFirst()
+	if destroyCard and Duel.Destroy(destroyCard,REASON_EFFECT) > 0 then
+		-- Destroy the opponent's card if the destruction of "Crystal Beast" was successful
+		local targetCard=dg:Filter(Card.IsControler,nil,1-tp):GetFirst()
+		if targetCard then
+			Duel.Destroy(targetCard,REASON_EFFECT)
+		end
+	end
+end
+
 

@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMixN(c,false,false,CARD_NEOS,1,s.ffilter,4)
+	Fusion.AddProcMixN(c,false,false,CARD_NEOS,1,s.ffilter,5)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
 
 	--Must be Fusion Summoned
