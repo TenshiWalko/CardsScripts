@@ -1,5 +1,6 @@
 --Critias The Blue-Eyes Dragon
 local s,id=GetID()
+
 s.listed_names={CARD_BLUEEYES_W_DRAGON}
 
 function s.initial_effect(c)
