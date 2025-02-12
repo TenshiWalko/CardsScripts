@@ -22,27 +22,6 @@ function s.initial_effect(c)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 
-	--Cannot be Tributed
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCode(EFFECT_UNRELEASABLE_SUM)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetValue(1)
-	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetCode(EFFECT_UNRELEASABLE_NONSUM)
-	c:RegisterEffect(e3)
-
-	--Cannot be Destroyed by card effect
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetValue(1)
-	c:RegisterEffect(e4)
-
 	-- Once per turn (Quick Effect): Gain 1000 ATK and copy the effect of a Fusion Monster that lists "Elemental HERO Neos" as material from your Extra Deck or GY.
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(id,0))

@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 
-s.listed_names={CARD_JACK_KNIGHT,CARD_KING_KNIGHT,CARD_QUEEN_KNIGHT}
+	s.listed_names={CARD_JACK_KNIGHT,CARD_KING_KNIGHT,CARD_QUEEN_KNIGHT}
 
 	-- Invocación especial desde la mano o Cementerio
 	local e1=Effect.CreateEffect(c)
@@ -133,9 +133,11 @@ end
 -- Condición: cuando se activa una carta o efecto que selecciona una carta boca arriba en el campo, excepto esta carta
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and Duel.IsChainNegatable(ev)
-		and rp~=tp and re:GetHandler()~=c
-		and Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS):IsExists(aux.TRUE,1,c)
+	if not (re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and Duel.IsChainNegatable(ev) and rp~=tp and re:GetHandler()~=c) then
+		return false
+	end
+	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return tg and tg:IsExists(Card.IsFaceup,1,c)
 end
 
 -- Coste: descartar una carta del mismo tipo que la activada (Monstruo, Mágica o Trampa)
@@ -162,7 +164,5 @@ end
 
 -- Operación: Negar la activación del efecto
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) then
-		-- Puedes añadir efectos adicionales si es necesario
-	end
+	Duel.NegateActivation(ev)
 end
